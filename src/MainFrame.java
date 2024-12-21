@@ -68,6 +68,11 @@ public class MainFrame extends javax.swing.JFrame {
 
         checkWeatherButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         checkWeatherButton.setText("Cek Cuaca");
+        checkWeatherButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkWeatherButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -183,6 +188,19 @@ public class MainFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void checkWeatherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkWeatherButtonActionPerformed
+        // TODO add your handling code here:
+        try {
+            String location = locationTextField.getText();
+            String weather = WeatherAPI.getWeather(location);
+            resultLabel.setText("Cuaca: " + weather);
+            // Tambahkan logika untuk menampilkan ikon cuaca di iconLabel
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            resultLabel.setText("Error: Gagal mengambil data cuaca");
+        }
+    }//GEN-LAST:event_checkWeatherButtonActionPerformed
 
     /**
      * @param args the command line arguments
