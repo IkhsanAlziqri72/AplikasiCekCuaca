@@ -65,6 +65,11 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel2.setText("Masukkan Lokasi");
 
         favoriteComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        favoriteComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                favoriteComboBoxActionPerformed(evt);
+            }
+        });
 
         checkWeatherButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         checkWeatherButton.setText("Cek Cuaca");
@@ -120,10 +125,20 @@ public class MainFrame extends javax.swing.JFrame {
 
         saveDataButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         saveDataButton.setText("Simpan Data");
+        saveDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveDataButtonActionPerformed(evt);
+            }
+        });
 
         iconLabel.setText("Gambar");
 
         loadDataButton.setText("Load Data");
+        loadDataButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadDataButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -201,6 +216,37 @@ public class MainFrame extends javax.swing.JFrame {
             resultLabel.setText("Error: Gagal mengambil data cuaca");
         }
     }//GEN-LAST:event_checkWeatherButtonActionPerformed
+    
+    private void favoriteComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_favoriteComboBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_favoriteComboBoxActionPerformed
+
+    private void saveDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDataButtonActionPerformed
+        // TODO add your handling code here:
+        try (java.io.FileWriter writer = new java.io.FileWriter("dataCuaca.csv", true)) {
+            String location = locationTextField.getText();
+            String weather = resultLabel.getText();
+            writer.append(location).append(",").append(weather).append("\n");
+            javax.swing.JOptionPane.showMessageDialog(this, "Data berhasil disimpan!");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_saveDataButtonActionPerformed
+
+    private void loadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataButtonActionPerformed
+        // TODO add your handling code here:
+        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader("dataCuaca.csv"))) {
+            String line;
+            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) weatherTable.getModel();
+            model.setRowCount(0); // Hapus data lama
+            while ((line = reader.readLine()) != null) {
+                String[] data = line.split(",");
+                model.addRow(data);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_loadDataButtonActionPerformed
 
     /**
      * @param args the command line arguments
