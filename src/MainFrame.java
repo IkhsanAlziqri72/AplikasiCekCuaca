@@ -1,6 +1,12 @@
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.net.URL;
 import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
@@ -289,28 +295,53 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void saveDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveDataButtonActionPerformed
         // TODO add your handling code here:
-        try (java.io.FileWriter writer = new java.io.FileWriter("dataCuaca.csv", true)) {
-            String location = locationTextField.getText();
-            String weather = resultLabel.getText();
-            writer.append(location).append(",").append(weather).append("\n");
-            javax.swing.JOptionPane.showMessageDialog(this, "Data berhasil disimpan!");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+         try {
+            // Pilih file untuk menyimpan data
+            JFileChooser fileChooser = new JFileChooser();
+            int option = fileChooser.showSaveDialog(null);
+            if (option == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                // Tulis data tabel ke file
+                FileWriter writer = new FileWriter(file);
+                DefaultTableModel model = (DefaultTableModel) weatherTable.getModel();
+                // Simpan setiap baris tabel
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    String lokasi = model.getValueAt(i, 0).toString();
+                    String cuaca = model.getValueAt(i, 1).toString();
+                    writer.write(lokasi + "," + cuaca + "\n");
+                }
+                writer.close();
+                JOptionPane.showMessageDialog(null, "Data berhasil disimpan!");
+            }
+    } catch (IOException ex) {
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Terjadi kesalahan saat menyimpan data.");
+    }
     }//GEN-LAST:event_saveDataButtonActionPerformed
 
     private void loadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadDataButtonActionPerformed
-        // TODO add your handling code here:
-        try (java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader("dataCuaca.csv"))) {
-            String line;
-            javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) weatherTable.getModel();
-            model.setRowCount(0); // Hapus data lama
-            while ((line = reader.readLine()) != null) {
-                String[] data = line.split(",");
-                model.addRow(data);
+        try {
+            // Pilih file untuk memuat data
+            JFileChooser fileChooser = new JFileChooser();
+            int option = fileChooser.showOpenDialog(null);
+            if (option == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                BufferedReader reader = new BufferedReader(new FileReader(file));
+                DefaultTableModel model = (DefaultTableModel) weatherTable.getModel();
+                // Hapus data lama di tabel
+                model.setRowCount(0);
+                // Baca setiap baris dari file
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[] data = line.split(","); // Data dipisahkan koma
+                    model.addRow(data); // Tambahkan data ke tabel
+                }
+                reader.close();
+                JOptionPane.showMessageDialog(null, "Data berhasil dimuat!");
             }
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Terjadi kesalahan saat memuat data.");
         }
     }//GEN-LAST:event_loadDataButtonActionPerformed
 
