@@ -15,39 +15,56 @@ public class WeatherAPI {
     // Ganti dengan API Key Anda
     private static final String API_KEY = "4f6b50592e09bf609e325612dcc34d85";
 
-    // Method untuk mengambil cuaca berdasarkan lokasi
-    public static String getWeather(String location) throws Exception {
-        // URL endpoint dengan lokasi dan API Key
+    /**
+     * Method untuk mengambil respons JSON dari API OpenWeatherMap.
+     * @param location Nama kota yang ingin dicek cuacanya.
+     * @return String berisi respons JSON dari API.
+     * @throws Exception Jika terjadi kesalahan koneksi atau pengambilan data.
+     */
+    public static String getWeatherResponse(String location) throws Exception {
         String urlString = "http://api.openweathermap.org/data/2.5/weather?q="
-                           + location + "&units=metric&lang=id&appid=" + API_KEY;
-
-        // Membuat koneksi HTTP
+                           + location + "&appid=" + API_KEY + "&units=metric";
         URL url = new URL(urlString);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
-        // Membaca respons dari API
+        // Baca respons dari API
         BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         StringBuilder response = new StringBuilder();
-        String inputLine;
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);
+        String line;
+        while ((line = in.readLine()) != null) {
+            response.append(line);
         }
         in.close();
 
-        // Mengembalikan data cuaca
-        return parseWeatherResponse(response.toString());
+        return response.toString(); // Kembalikan respons JSON sebagai String
     }
 
-    // Method untuk mem-parsing data JSON respons API
-    private static String parseWeatherResponse(String response) {
+    /**
+     * Method untuk memproses respons JSON dan mengambil deskripsi cuaca serta suhu.
+     * @param response Respons JSON dari API.
+     * @return String berisi deskripsi cuaca dan suhu.
+     */
+    public static String parseWeatherResponse(String response) {
         JSONObject json = new JSONObject(response);
-        
-        // Ambil informasi utama dari JSON
+
+        // Ambil deskripsi cuaca dan suhu
         String description = json.getJSONArray("weather").getJSONObject(0).getString("description");
         double temperature = json.getJSONObject("main").getDouble("temp");
 
-        // Gabungkan informasi menjadi teks deskripsi
+        // Format data cuaca
         return String.format("Cuaca: %s, Suhu: %.1f°C", description, temperature);
+    }
+
+    /**
+     * Method untuk memproses respons JSON dan mengambil kode ikon cuaca.
+     * @param response Respons JSON dari API.
+     * @return String berisi kode ikon cuaca.
+     */
+    public static String parseWeatherIcon(String response) {
+        JSONObject json = new JSONObject(response);
+
+        // Ambil kode ikon dari array "weather"
+        return json.getJSONArray("weather").getJSONObject(0).getString("icon");
     }
 }

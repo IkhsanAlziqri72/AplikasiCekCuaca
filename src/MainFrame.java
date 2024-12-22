@@ -1,3 +1,10 @@
+
+import java.net.URL;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import org.json.JSONObject;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
@@ -32,6 +39,8 @@ public class MainFrame extends javax.swing.JFrame {
         locationTextField = new javax.swing.JTextField();
         favoriteComboBox = new javax.swing.JComboBox<>();
         checkWeatherButton = new javax.swing.JButton();
+        addFavoriteButton = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         resultLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -64,20 +73,35 @@ public class MainFrame extends javax.swing.JFrame {
 
         jLabel2.setText("Masukkan Lokasi");
 
-        favoriteComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        favoriteComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Jakarta", "Bandung", "Makassar", "Papua" }));
+        favoriteComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                favoriteComboBoxItemStateChanged(evt);
+            }
+        });
         favoriteComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 favoriteComboBoxActionPerformed(evt);
             }
         });
 
-        checkWeatherButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        checkWeatherButton.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         checkWeatherButton.setText("Cek Cuaca");
         checkWeatherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 checkWeatherButtonActionPerformed(evt);
             }
         });
+
+        addFavoriteButton.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        addFavoriteButton.setText("Tambah Lokasi Favorite");
+        addFavoriteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addFavoriteButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel3.setText("Lokasi Favorite");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -88,24 +112,33 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(checkWeatherButton)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(checkWeatherButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addFavoriteButton))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(locationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 157, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(favoriteComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(favoriteComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(locationTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(favoriteComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(checkWeatherButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(checkWeatherButton)
+                    .addComponent(addFavoriteButton))
+                .addGap(16, 16, 16))
         );
 
         resultLabel.setText("Teks");
@@ -130,8 +163,6 @@ public class MainFrame extends javax.swing.JFrame {
                 saveDataButtonActionPerformed(evt);
             }
         });
-
-        iconLabel.setText("Gambar");
 
         loadDataButton.setText("Load Data");
         loadDataButton.addActionListener(new java.awt.event.ActionListener() {
@@ -194,26 +225,43 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void checkWeatherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkWeatherButtonActionPerformed
-        // TODO add your handling code here:
+    private void displayWeatherIcon(String iconCode) {
         try {
+            String iconUrl = "http://openweathermap.org/img/wn/" + iconCode + "@2x.png";
+            URL url = new URL(iconUrl);
+            ImageIcon icon = new ImageIcon(url);
+            iconLabel.setIcon(icon); // Tampilkan ikon di JLabel
+        } catch (Exception e) {
+            e.printStackTrace();
+            iconLabel.setText("Gagal memuat ikon");
+        }
+    }
+    private void checkWeatherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkWeatherButtonActionPerformed
+        try {
+            // Ambil input lokasi
             String location = locationTextField.getText();
-            String weather = WeatherAPI.getWeather(location);
-            resultLabel.setText("Cuaca: " + weather);
-            // Tambahkan logika untuk menampilkan ikon cuaca di iconLabel
+            // Ambil respons dari API
+            String response = WeatherAPI.getWeatherResponse(location);
+             // Parsing data cuaca
+            String weatherInfo = WeatherAPI.parseWeatherResponse(response); // Deskripsi dan suhu
+            String iconCode = WeatherAPI.parseWeatherIcon(response); // Kode ikon
+            // Tampilkan data di GUI
+            resultLabel.setText(weatherInfo); // Deskripsi cuaca
+            displayWeatherIcon(iconCode); // Tampilkan ikon cuaca
         } catch (Exception ex) {
             ex.printStackTrace();
-            resultLabel.setText("Error: Gagal mengambil data cuaca");
+            resultLabel.setText("Gagal mengambil data cuaca.");
+            iconLabel.setText(""); // Reset ikon jika gagal
         }
     }//GEN-LAST:event_checkWeatherButtonActionPerformed
     
@@ -247,6 +295,41 @@ public class MainFrame extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_loadDataButtonActionPerformed
+
+    private void favoriteComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_favoriteComboBoxItemStateChanged
+        // TODO add your handling code here:
+        // Ambil lokasi yang dipilih dari JComboBox
+        String selectedLocation = favoriteComboBox.getSelectedItem().toString();
+        // Jika lokasi valid, masukkan ke JTextField
+        if (!selectedLocation.equals("Pilih Lokasi Favorit")) {
+            locationTextField.setText(selectedLocation);
+        }
+    }//GEN-LAST:event_favoriteComboBoxItemStateChanged
+    private boolean isLocationInFavorites(String location) {
+        for (int i = 0; i < favoriteComboBox.getItemCount(); i++) {
+            if (favoriteComboBox.getItemAt(i).equalsIgnoreCase(location)) {
+                return true; // Lokasi ditemukan
+            }
+        }
+        return false; // Lokasi tidak ditemukan
+    }
+
+    private void addFavoriteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addFavoriteButtonActionPerformed
+        // TODO add your handling code here:
+         String location = locationTextField.getText(); // Ambil input lokasi dari JTextField
+        // Validasi input
+        if (location != null && !location.isEmpty()) {
+            // Cek apakah lokasi sudah ada di daftar favorit
+            if (!isLocationInFavorites(location)) {
+                favoriteComboBox.addItem(location); // Tambahkan ke JComboBox
+                JOptionPane.showMessageDialog(this, "Lokasi berhasil ditambahkan ke favorit!");
+            } else {
+                JOptionPane.showMessageDialog(this, "Lokasi sudah ada di favorit!");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Input lokasi tidak boleh kosong!");
+        }
+    }//GEN-LAST:event_addFavoriteButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -284,11 +367,13 @@ public class MainFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addFavoriteButton;
     private javax.swing.JButton checkWeatherButton;
     private javax.swing.JComboBox<String> favoriteComboBox;
     private javax.swing.JLabel iconLabel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
